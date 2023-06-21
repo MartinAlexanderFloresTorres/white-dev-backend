@@ -66,7 +66,11 @@ export const obtenerProyectos = async (req, res) => {
     if (q && tecnologias) {
       const proyectos = await Proyecto.paginate(
         {
-          $or: [{ nombre: { $regex: q, $options: 'i' } }, { descripcion: { $regex: q, $options: 'i' } }, { contenido: { $regex: q, $options: 'i' } }],
+          $or: [
+            { nombre: { $regex: q, $options: 'i' } },
+            { descripcion: { $regex: q, $options: 'i' } },
+            { contenido: { $regex: q, $options: 'i' } }
+          ],
           $and: [
             {
               tecnologias: { $in: tecnologiasArray }
@@ -76,7 +80,8 @@ export const obtenerProyectos = async (req, res) => {
         {
           limit,
           page,
-          populate: 'tecnologias'
+          populate: 'tecnologias',
+          sort: { createdAt: -1 }
         }
       )
 
@@ -85,11 +90,18 @@ export const obtenerProyectos = async (req, res) => {
 
     if (q) {
       const proyectos = await Proyecto.paginate(
-        { $or: [{ nombre: { $regex: q, $options: 'i' } }, { descripcion: { $regex: q, $options: 'i' } }, { contenido: { $regex: q, $options: 'i' } }] },
+        {
+          $or: [
+            { nombre: { $regex: q, $options: 'i' } },
+            { descripcion: { $regex: q, $options: 'i' } },
+            { contenido: { $regex: q, $options: 'i' } }
+          ]
+        },
         {
           limit,
           page,
-          populate: 'tecnologias'
+          populate: 'tecnologias',
+          sort: { createdAt: -1 }
         }
       )
       return res.json(proyectos)
@@ -108,7 +120,8 @@ export const obtenerProyectos = async (req, res) => {
         {
           limit,
           page,
-          populate: 'tecnologias'
+          populate: 'tecnologias',
+          sort: { createdAt: -1 }
         }
       )
 
@@ -116,7 +129,10 @@ export const obtenerProyectos = async (req, res) => {
     }
 
     // OBTENER TODOS CON POPULATE (TECNOLOGIAS)
-    const proyectos = await Proyecto.paginate({}, { page, limit, populate: 'tecnologias' })
+    const proyectos = await Proyecto.paginate(
+      {},
+      { page, limit, populate: 'tecnologias', sort: { createdAt: -1 } }
+    )
 
     res.json(proyectos)
   } catch (error) {
